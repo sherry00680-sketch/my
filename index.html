@@ -14,7 +14,6 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         body { background-color: #0f172a; margin: 0; overscroll-behavior-y: contain; }
-        /* 確保手機端點擊不會有藍色陰影 */
         * { -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
@@ -25,14 +24,12 @@
         const { useState, useMemo, useEffect } = React;
         const { motion, AnimatePresence } = FramerMotion;
         
-        // 從 Lucide 取得圖示
         const { 
             Plane, ShoppingBag, Snowflake, Star, Train, CheckCircle2, Circle, 
             Calendar, ChevronRight, X, Info, Navigation, Trash2, CloudSnow, 
             CloudSun, ExternalLink, MapPin, Hotel, ShieldAlert, AlertTriangle, MessageCircle, ShoppingCart 
         } = lucide;
 
-        // --- 行程資料 ---
         const itineraryData = [
             { 
                 day: "Day 1", date: "2/1", title: "啟程與深夜東京", icon: <Plane />, category: ["transport"],
@@ -131,7 +128,6 @@
             const [countdown, setCountdown] = useState("");
             const [currentBg, setCurrentBg] = useState(itineraryData[0].bgUrl);
 
-            // 倒數計時邏輯
             useEffect(() => {
                 const target = new Date("2026-02-01T20:55:00").getTime();
                 const interval = setInterval(() => {
@@ -156,7 +152,6 @@
 
             return (
                 <div className="min-h-screen text-white overflow-x-hidden text-left pb-24">
-                    {/* 背景圖層 */}
                     <div className="fixed inset-0 z-0">
                         <AnimatePresence mode='wait'>
                             <motion.img
@@ -172,7 +167,6 @@
                         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/20 via-slate-900/60 to-slate-900 z-10" />
                     </div>
 
-                    {/* Header */}
                     <header className="relative z-30 px-6 pt-12 pb-6">
                         <div className="flex justify-end mb-4">
                             <button onClick={() => window.open('https://www.data.jma.go.jp/multi/yoho/yoho_detail.html?code=130010&lang=cn_zt')} className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-2 flex items-center gap-2 text-xs">
@@ -185,7 +179,6 @@
                         </motion.div>
                     </header>
 
-                    {/* 導航列 */}
                     <nav className="sticky top-4 z-50 px-4 mb-8">
                         <div className="bg-slate-900/80 backdrop-blur-xl p-1 rounded-full border border-white/10 flex overflow-x-auto no-scrollbar">
                             {['itinerary', 'packing', 'info'].map((tab) => (
@@ -197,7 +190,6 @@
                         </div>
                     </nav>
 
-                    {/* 主內容 */}
                     <main className="relative z-30 px-6 max-w-md mx-auto">
                         <AnimatePresence mode="wait">
                             {activeTab === 'itinerary' && (
@@ -238,7 +230,6 @@
                         </AnimatePresence>
                     </main>
 
-                    {/* 行程 Modal */}
                     <AnimatePresence>
                         {selectedDay && (
                             <div className="fixed inset-0 z-[100] flex items-end">
@@ -271,23 +262,8 @@
                         )}
                     </AnimatePresence>
 
-                    {/* 底部過濾按鈕 */}
                     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[280px] z-50">
                         <div className="bg-slate-900/90 backdrop-blur-2xl rounded-full p-2 flex justify-around items-center shadow-2xl border border-white/10 h-14">
                             <button onClick={() => setFilter('transport')} className={`p-2 rounded-full ${filter === 'transport' ? 'text-cyan-400' : 'text-slate-600'}`}><Plane size={20} /></button>
                             <button onClick={() => {setFilter('all'); setCurrentBg(itineraryData[0].bgUrl)}} className="w-12 h-12 bg-cyan-600 rounded-full flex items-center justify-center text-white"><Snowflake size={24} /></button>
                             <button onClick={() => setFilter('ski')} className={`p-2 rounded-full ${filter === 'ski' ? 'text-blue-400' : 'text-slate-600'}`}><CloudSnow size={20} /></button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
-};
-
-export default App;
