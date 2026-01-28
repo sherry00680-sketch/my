@@ -37,7 +37,6 @@
                 bgUrl: "https://images.unsplash.com/photo-1542259009477-d625c009b5d7?q=80&w=2070&auto=format&fit=crop", 
                 detail: "航班 MM860 | 抵達羽田", 
                 mapQuery: "Ostay Ueno Tokyo",
-                flightInfo: { no: "Peach MM860", route: "TPE ✈️ HND", terminal: "桃園 T1 / 羽田 T3" },
                 extendedDetail: [
                     { time: "20:55", task: "航班起飛前往羽田" },
                     { time: "00:50", task: "抵達羽田機場 T3" },
@@ -55,13 +54,13 @@
                     { time: "11:00", task: "起床補眠 & 早午餐" },
                     { time: "13:00", task: "神田小川町雪具街採買" }
                 ],
-                memo: "Suica 綁定 Apple Wallet 手機進出更方便。"
+                memo: "Suica 綁定 Apple Wallet。"
             },
             { 
                 day: "Day 3", date: "2/3", title: "夢幻迪士尼海洋", icon: <Star />, category: ["attraction"],
                 color: "from-amber-400 to-orange-500",
                 bgUrl: "https://images.unsplash.com/photo-1594916309831-294025b42d76?q=80&w=2070&auto=format&fit=crop", 
-                detail: "DisneySea 攻略 | DPA 搶券", 
+                detail: "DisneySea 攻略", 
                 mapQuery: "Tokyo DisneySea",
                 extendedDetail: [
                     { time: "07:30", task: "包車飯店門口集合" },
@@ -80,7 +79,6 @@
             const [activeTab, setActiveTab] = useState('itinerary');
             const [checkedItems, setCheckedItems] = useState({});
             const [selectedDay, setSelectedDay] = useState(null);
-            const [filter, setFilter] = useState('all');
             const [countdown, setCountdown] = useState("");
             const [currentBg, setCurrentBg] = useState(itineraryData[0].bgUrl);
 
@@ -90,23 +88,18 @@
                     const now = new Date().getTime();
                     const diff = target - now;
                     if (diff < 0) {
-                        setCountdown("已啟程");
+                        setCountdown("已啟程 ✈️");
                         clearInterval(interval);
                     } else {
                         const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                        setCountdown(`${d}天`);
+                        setCountdown(`${d} 天`);
                     }
                 }, 1000);
                 return () => clearInterval(interval);
             }, []);
 
-            const filteredItinerary = useMemo(() => {
-                if (filter === 'all') return itineraryData;
-                return itineraryData.filter(item => item.category.includes(filter));
-            }, [filter]);
-
             return (
-                <div className="min-h-screen text-white overflow-x-hidden pb-24 relative">
+                <div className="min-h-screen text-white overflow-x-hidden text-left pb-24 relative">
                     <div className="fixed inset-0 z-0">
                         <AnimatePresence mode='wait'>
                             <motion.img
@@ -118,22 +111,25 @@
                                 className="w-full h-full object-cover"
                             />
                         </AnimatePresence>
-                        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/20 to-slate-900 z-10" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/20 via-slate-900/60 to-slate-900 z-10" />
                     </div>
 
                     <header className="relative z-30 px-6 pt-12 pb-6">
                         <div className="flex justify-end mb-4">
-                            <button onClick={() => window.open('https://www.data.jma.go.jp/multi/yoho/yoho_detail.html?code=130010&lang=cn_zt')} className="bg-white/10 p-2 rounded-xl text-xs flex items-center gap-2">
-                                <CloudSun size={16} /> 天氣查詢
+                            <button onClick={() => window.open('https://www.data.jma.go.jp/multi/yoho/yoho_detail.html?code=130010&lang=cn_zt')} className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-2 flex items-center gap-2 text-xs">
+                                <CloudSun size={16} className="text-cyan-400" /> 東京天氣
                             </button>
                         </div>
-                        <h1 className="text-3xl font-black">{countdown} 後啟程</h1>
+                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                            <span className="text-cyan-400 font-bold tracking-widest text-[10px] uppercase">{countdown} TO GO</span>
+                            <h1 className="text-3xl font-black mt-1">東京 & 越後湯澤</h1>
+                        </motion.div>
                     </header>
 
                     <nav className="sticky top-4 z-50 px-4 mb-8">
                         <div className="bg-slate-900/80 backdrop-blur-xl p-1 rounded-full border border-white/10 flex">
                             {['itinerary', 'packing'].map((tab) => (
-                                <button key={tab} onClick={() => setActiveTab(tab)} className={`flex-1 py-3 rounded-full text-xs font-bold uppercase relative ${activeTab === tab ? 'text-white' : 'text-slate-500'}`}>
+                                <button key={tab} onClick={() => setActiveTab(tab)} className={`flex-1 py-3 rounded-full text-[10px] font-bold uppercase transition-all relative ${activeTab === tab ? 'text-white' : 'text-slate-500'}`}>
                                     {activeTab === tab && <motion.div layoutId="tab" className="absolute inset-0 bg-cyan-600 rounded-full z-0" />}
                                     <span className="relative z-10">{tab === 'itinerary' ? '行程' : '行李'}</span>
                                 </button>
@@ -141,68 +137,29 @@
                         </div>
                     </nav>
 
-                    <main className="relative z-30 px-6">
-                        {activeTab === 'itinerary' && (
-                            <div className="space-y-4">
-                                {filteredItinerary.map((item) => (
-                                    <div key={item.day} onClick={() => {setSelectedDay(item); setCurrentBg(item.bgUrl)}} className="bg-white rounded-2xl p-4 flex items-center gap-4">
-                                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-white`}>
-                                            {item.icon}
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="text-slate-900 font-bold">{item.title}</div>
-                                            <div className="text-slate-400 text-xs">{item.detail}</div>
-                                        </div>
-                                        <ChevronRight size={16} className="text-slate-300" />
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {activeTab === 'packing' && (
-                            <div className="space-y-6">
-                                {Object.entries(initialPackingList).map(([category, items]) => (
-                                    <div key={category} className="bg-slate-800/50 p-5 rounded-2xl">
-                                        <h3 className="text-cyan-400 text-xs font-bold mb-4">{category}</h3>
-                                        <div className="space-y-3">
-                                            {items.map(item => (
-                                                <div key={item} onClick={() => setCheckedItems(prev => ({...prev, [item]: !prev[item]}))} className="flex items-center gap-3">
-                                                    {checkedItems[item] ? <CheckCircle2 size={18} className="text-emerald-500" /> : <Circle size={18} className="text-slate-600" />}
-                                                    <span className={`text-sm ${checkedItems[item] ? 'line-through text-slate-500' : ''}`}>{item}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </main>
-
-                    <AnimatePresence>
-                        {selectedDay && (
-                            <div className="fixed inset-0 z-[100] flex items-end">
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedDay(null)} className="absolute inset-0 bg-black/80" />
-                                <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="relative w-full bg-white rounded-t-3xl p-6 text-slate-900 max-h-[80vh] overflow-y-auto">
-                                    <h2 className="text-2xl font-black mb-6">{selectedDay.title}</h2>
-                                    <div className="space-y-6">
-                                        {selectedDay.extendedDetail.map((step, i) => (
-                                            <div key={i} className="flex gap-4 border-l-2 border-slate-100 pl-4">
-                                                <div className="text-cyan-600 font-bold text-xs">{step.time}</div>
-                                                <div className="font-bold">{step.task}</div>
+                    <main className="relative z-30 px-6 max-w-md mx-auto">
+                        <AnimatePresence mode="wait">
+                            {activeTab === 'itinerary' && (
+                                <motion.div key="itinerary" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+                                    {itineraryData.map((item) => (
+                                        <div key={item.day} onClick={() => {setSelectedDay(item); setCurrentBg(item.bgUrl)}} className="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-lg cursor-pointer">
+                                            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-white`}>
+                                                {item.icon}
                                             </div>
-                                        ))}
-                                    </div>
-                                    <button onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedDay.mapQuery)}`)} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold mt-8">開啟地圖</button>
+                                            <div className="flex-1">
+                                                <div className="text-[10px] font-bold text-blue-600 uppercase">{item.day} · {item.date}</div>
+                                                <div className="text-slate-900 font-bold">{item.title}</div>
+                                                <div className="text-slate-400 text-xs truncate">{item.detail}</div>
+                                            </div>
+                                            <ChevronRight size={16} className="text-slate-300" />
+                                        </div>
+                                    ))}
                                 </motion.div>
-                            </div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            );
-        };
+                            )}
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
+                            {activeTab === 'packing' && (
+                                <motion.div key="packing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
+                                    {Object.entries(initialPackingList).map(([category, items]) => (
+                                        <div key={category} className="bg-slate-800/50 backdrop-blur-md rounded-2xl p-5 border border-white/5">
+                                            <h3 className="text-cyan-400 text-xs font-bold mb-4">{category}</h3>
+                                            <div className="space-y-3">
