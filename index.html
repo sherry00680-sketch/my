@@ -13,7 +13,7 @@
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        body { background-color: #0f172a; margin: 0; overscroll-behavior-y: contain; }
+        body { background-color: #0f172a; margin: 0; overscroll-behavior-y: contain; text-align: left; }
         * { -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
@@ -24,12 +24,14 @@
         const { useState, useMemo, useEffect } = React;
         const { motion, AnimatePresence } = FramerMotion;
         
+        // 取得圖示
         const { 
             Plane, ShoppingBag, Snowflake, Star, Train, CheckCircle2, Circle, 
             Calendar, ChevronRight, X, Info, Navigation, Trash2, CloudSnow, 
             CloudSun, ExternalLink, MapPin, Hotel, ShieldAlert, AlertTriangle, MessageCircle, ShoppingCart 
         } = lucide;
 
+        // 行程資料
         const itineraryData = [
             { 
                 day: "Day 1", date: "2/1", title: "啟程與深夜東京", icon: <Plane />, category: ["transport"],
@@ -201,8 +203,8 @@
                                             </div>
                                             <div className="flex-1">
                                                 <div className="text-[10px] font-bold text-blue-600 uppercase">{item.day} · {item.date}</div>
-                                                <div className="text-slate-900 font-bold">{item.title}</div>
-                                                <div className="text-slate-400 text-xs truncate">{item.detail}</div>
+                                                <div className="text-slate-900 font-bold text-left">{item.title}</div>
+                                                <div className="text-slate-400 text-xs truncate text-left">{item.detail}</div>
                                             </div>
                                             <ChevronRight size={16} className="text-slate-300" />
                                         </div>
@@ -214,7 +216,7 @@
                                 <motion.div key="packing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
                                     {Object.entries(initialPackingList).map(([category, items]) => (
                                         <div key={category} className="bg-slate-800/50 backdrop-blur-md rounded-2xl p-5 border border-white/5">
-                                            <h3 className="text-cyan-400 text-xs font-bold mb-4">{category}</h3>
+                                            <h3 className="text-cyan-400 text-xs font-bold mb-4 text-left">{category}</h3>
                                             <div className="space-y-3">
                                                 {items.map(item => (
                                                     <div key={item} onClick={() => setCheckedItems(prev => ({...prev, [item]: !prev[item]}))} className="flex items-center gap-3">
@@ -234,7 +236,7 @@
                         {selectedDay && (
                             <div className="fixed inset-0 z-[100] flex items-end">
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedDay(null)} className="absolute inset-0 bg-black/80" />
-                                <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="relative w-full bg-white rounded-t-3xl p-6 text-slate-900 max-h-[85vh] overflow-y-auto">
+                                <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="relative w-full bg-white rounded-t-3xl p-6 text-slate-900 max-h-[85vh] overflow-y-auto text-left">
                                     <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-6" />
                                     <div className="flex justify-between items-center mb-6">
                                         <div>
@@ -247,11 +249,11 @@
                                         {selectedDay.extendedDetail.map((step, i) => (
                                             <div key={i} className="flex gap-4">
                                                 <div className="text-cyan-600 font-bold text-xs pt-1 w-12">{step.time}</div>
-                                                <div className="flex-1 text-slate-800 font-bold">{step.task}</div>
+                                                <div className="flex-1 text-slate-800 font-bold text-left">{step.task}</div>
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-100 italic text-sm text-slate-500">
+                                    <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-100 italic text-sm text-slate-500 text-left">
                                         {selectedDay.memo}
                                     </div>
                                     <button onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedDay.mapQuery)}`)} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold mt-8 flex items-center justify-center gap-2">
@@ -267,3 +269,14 @@
                             <button onClick={() => setFilter('transport')} className={`p-2 rounded-full ${filter === 'transport' ? 'text-cyan-400' : 'text-slate-600'}`}><Plane size={20} /></button>
                             <button onClick={() => {setFilter('all'); setCurrentBg(itineraryData[0].bgUrl)}} className="w-12 h-12 bg-cyan-600 rounded-full flex items-center justify-center text-white"><Snowflake size={24} /></button>
                             <button onClick={() => setFilter('ski')} className={`p-2 rounded-full ${filter === 'ski' ? 'text-blue-400' : 'text-slate-600'}`}><CloudSnow size={20} /></button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
