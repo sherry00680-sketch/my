@@ -88,7 +88,7 @@
                     const now = new Date().getTime();
                     const diff = target - now;
                     if (diff < 0) {
-                        setCountdown("已啟程 ✈️");
+                        setCountdown("已啟程");
                         clearInterval(interval);
                     } else {
                         const d = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -198,10 +198,7 @@
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-100 italic text-sm text-slate-500">
-                                        {selectedDay.memo}
-                                    </div>
-                                    <button onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedDay.mapQuery)}`)} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold mt-8 flex items-center justify-center gap-2">
+                                    <button onClick={() => window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(selectedDay.mapQuery))} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold mt-8 flex items-center justify-center gap-2">
                                         <MapPin size={18} /> 查看 Google 地圖
                                     </button>
                                 </motion.div>
