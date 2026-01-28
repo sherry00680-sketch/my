@@ -163,3 +163,57 @@
                                         <div key={category} className="bg-slate-800/50 backdrop-blur-md rounded-2xl p-5 border border-white/5">
                                             <h3 className="text-cyan-400 text-xs font-bold mb-4">{category}</h3>
                                             <div className="space-y-3">
+                                                {items.map(item => (
+                                                    <div key={item} onClick={() => setCheckedItems(prev => ({...prev, [item]: !prev[item]}))} className="flex items-center gap-3">
+                                                        {checkedItems[item] ? <CheckCircle2 size={18} className="text-emerald-500" /> : <Circle size={18} className="text-slate-600" />}
+                                                        <span className={`text-sm ${checkedItems[item] ? 'line-through text-slate-500' : 'text-slate-200'}`}>{item}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </main>
+
+                    <AnimatePresence>
+                        {selectedDay && (
+                            <div className="fixed inset-0 z-[100] flex items-end">
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedDay(null)} className="absolute inset-0 bg-black/80" />
+                                <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="relative w-full bg-white rounded-t-3xl p-6 text-slate-900 max-h-[85vh] overflow-y-auto">
+                                    <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-6" />
+                                    <div className="flex justify-between items-center mb-6">
+                                        <div>
+                                            <div className="text-xs font-bold text-blue-600">{selectedDay.day} · {selectedDay.date}</div>
+                                            <h2 className="text-2xl font-black">{selectedDay.title}</h2>
+                                        </div>
+                                        <button onClick={() => setSelectedDay(null)} className="p-2 bg-slate-100 rounded-full"><X size={20} /></button>
+                                    </div>
+                                    <div className="space-y-6">
+                                        {selectedDay.extendedDetail.map((step, i) => (
+                                            <div key={i} className="flex gap-4">
+                                                <div className="text-cyan-600 font-bold text-xs pt-1 w-12">{step.time}</div>
+                                                <div className="flex-1 text-slate-800 font-bold">{step.task}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-100 italic text-sm text-slate-500">
+                                        {selectedDay.memo}
+                                    </div>
+                                    <button onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedDay.mapQuery)}`)} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold mt-8 flex items-center justify-center gap-2">
+                                        <MapPin size={18} /> 查看 Google 地圖
+                                    </button>
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
