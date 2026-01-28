@@ -24,20 +24,18 @@
         const { useState, useMemo, useEffect } = React;
         const { motion, AnimatePresence } = FramerMotion;
         
-        // 取得圖示
         const { 
             Plane, ShoppingBag, Snowflake, Star, Train, CheckCircle2, Circle, 
             Calendar, ChevronRight, X, Info, Navigation, Trash2, CloudSnow, 
             CloudSun, ExternalLink, MapPin, Hotel, ShieldAlert, AlertTriangle, MessageCircle, ShoppingCart 
         } = lucide;
 
-        // 行程資料
         const itineraryData = [
             { 
                 day: "Day 1", date: "2/1", title: "啟程與深夜東京", icon: <Plane />, category: ["transport"],
                 color: "from-blue-600 to-indigo-700",
                 bgUrl: "https://images.unsplash.com/photo-1542259009477-d625c009b5d7?q=80&w=2070&auto=format&fit=crop", 
-                detail: "航班 MM860 | 抵達羽田 | 包車接送", 
+                detail: "航班 MM860 | 抵達羽田", 
                 mapQuery: "Ostay Ueno Tokyo",
                 flightInfo: { no: "Peach MM860", route: "TPE ✈️ HND", terminal: "桃園 T1 / 羽田 T3" },
                 extendedDetail: [
@@ -45,7 +43,7 @@
                     { time: "00:50", task: "抵達羽田機場 T3" },
                     { time: "02:15", task: "抵達 Ostay Ueno 入住" }
                 ],
-                memo: "公寓下有 24H 超市，可購買深夜美食。"
+                memo: "公寓下有 24H 超市。"
             },
             { 
                 day: "Day 2", date: "2/2", title: "雪具專項：城市購物", icon: <ShoppingBag />, category: ["shopping"],
@@ -55,8 +53,7 @@
                 mapQuery: "神田小川町雪具街",
                 extendedDetail: [
                     { time: "11:00", task: "起床補眠 & 早午餐" },
-                    { time: "13:00", task: "神田小川町雪具街採買" },
-                    { time: "16:00", task: "上野阿美橫丁購物" }
+                    { time: "13:00", task: "神田小川町雪具街採買" }
                 ],
                 memo: "Suica 綁定 Apple Wallet 手機進出更方便。"
             },
@@ -67,59 +64,16 @@
                 detail: "DisneySea 攻略 | DPA 搶券", 
                 mapQuery: "Tokyo DisneySea",
                 extendedDetail: [
-                    { time: "07:30", task: "十人座包車飯店門口集合" },
-                    { time: "08:30", task: "APP 搶領 DPA 預約" },
-                    { time: "20:00", task: "返回上野公寓" }
+                    { time: "07:30", task: "包車飯店門口集合" },
+                    { time: "08:30", task: "APP 搶領 DPA 預約" }
                 ],
-                memo: "必搶項目：夢幻泉鄉。包車費用現場付現。"
-            },
-            { 
-                day: "Day 4", date: "2/4", title: "雪國新幹線 (半滑)", icon: <Train />, category: ["transport", "ski"], 
-                color: "from-cyan-500 to-blue-400",
-                bgUrl: "https://images.unsplash.com/photo-1490806678282-4aa49b88f200?q=80&w=2070&auto=format&fit=crop", 
-                detail: "新幹線前往越後湯澤 | 滑雪", 
-                mapQuery: "Kandatsu Kogen Ski Resort",
-                extendedDetail: [
-                    { time: "09:00", task: "前往上野站搭乘新幹線" },
-                    { time: "11:00", task: "抵達湯澤，燒肉午餐" },
-                    { time: "14:30", task: "神立高原滑雪場半日" }
-                ],
-                memo: "大型行李記得放置於車廂後方行李區。"
-            },
-            { 
-                day: "Day 5", date: "2/5", title: "粉雪全日滑走", icon: <Snowflake />, category: ["ski"],
-                color: "from-blue-200 to-indigo-300",
-                bgUrl: "https://images.unsplash.com/photo-1549110485-64d852079093?q=80&w=2070&auto=format&fit=crop", 
-                detail: "神立高原全日 | 溫泉放鬆", 
-                mapQuery: "Kandatsu Kogen Ski Resort",
-                extendedDetail: [
-                    { time: "09:00", task: "全日滑雪訓練開始" },
-                    { time: "12:00", task: "雪場餐廳景觀午餐" },
-                    { time: "16:00", task: "神之湯溫泉放鬆" }
-                ],
-                memo: "神立平日女性半價，建議確認官網最新資訊。"
-            },
-            { 
-                day: "Day 6", date: "2/6", title: "歸途：返台行程", icon: <Plane />, category: ["transport"],
-                color: "from-gray-600 to-gray-800",
-                bgUrl: "https://images.unsplash.com/photo-1496231447448-f541f0b02f82?q=80&w=2070&auto=format&fit=crop", 
-                detail: "新幹線返京 | 航班 SL395", 
-                mapQuery: "Narita Airport Terminal 1",
-                flightInfo: { no: "Thai Lion SL395", route: "NRT ✈️ TPE", terminal: "成田 T1N" },
-                extendedDetail: [
-                    { time: "10:00", task: "湯澤車站最後採買伴手禮" },
-                    { time: "14:45", task: "抵達成田機場 T1N" },
-                    { time: "17:15", task: "航班起飛返台" }
-                ],
-                memo: "湯澤站內推薦購買新潟米與清酒作為伴手禮。"
+                memo: "必搶項目：夢幻泉鄉。"
             }
         ];
 
         const initialPackingList = {
             "📋 行前作業": ["機票/飯店", "旅遊保險", "Esim", "VJW"],
-            "🔎 隨身證件": ["護照", "身分證", "信用卡", "日幣現金"],
-            "❄️ 滑雪裝備": ["雪衣/雪褲", "冰爪", "面鏡", "護具", "滑雪襪", "手套"],
-            "🔎 電器相關": ["行動電源", "萬國插頭", "充電線", "相機"]
+            "🔎 隨身證件": ["護照", "身分證", "日幣現金"]
         };
 
         const App = () => {
@@ -136,12 +90,11 @@
                     const now = new Date().getTime();
                     const diff = target - now;
                     if (diff < 0) {
-                        setCountdown("已啟程 ✈️");
+                        setCountdown("已啟程");
                         clearInterval(interval);
                     } else {
                         const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        setCountdown(`${d}天 ${h}時`);
+                        setCountdown(`${d}天`);
                     }
                 }, 1000);
                 return () => clearInterval(interval);
@@ -153,7 +106,7 @@
             }, [filter]);
 
             return (
-                <div className="min-h-screen text-white overflow-x-hidden text-left pb-24">
+                <div className="min-h-screen text-white overflow-x-hidden pb-24 relative">
                     <div className="fixed inset-0 z-0">
                         <AnimatePresence mode='wait'>
                             <motion.img
@@ -161,116 +114,89 @@
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 0.3 }}
                                 exit={{ opacity: 0 }}
-                                transition={{ duration: 1 }}
                                 src={currentBg}
                                 className="w-full h-full object-cover"
                             />
                         </AnimatePresence>
-                        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/20 via-slate-900/60 to-slate-900 z-10" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/20 to-slate-900 z-10" />
                     </div>
 
                     <header className="relative z-30 px-6 pt-12 pb-6">
                         <div className="flex justify-end mb-4">
-                            <button onClick={() => window.open('https://www.data.jma.go.jp/multi/yoho/yoho_detail.html?code=130010&lang=cn_zt')} className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-2 flex items-center gap-2 text-xs">
-                                <CloudSun size={16} className="text-cyan-400" /> 東京天氣
+                            <button onClick={() => window.open('https://www.data.jma.go.jp/multi/yoho/yoho_detail.html?code=130010&lang=cn_zt')} className="bg-white/10 p-2 rounded-xl text-xs flex items-center gap-2">
+                                <CloudSun size={16} /> 天氣查詢
                             </button>
                         </div>
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                            <span className="text-cyan-400 font-bold tracking-widest text-[10px] uppercase">{countdown} TO GO</span>
-                            <h1 className="text-3xl font-black mt-1 text-left">東京 & 越後湯澤</h1>
-                        </motion.div>
+                        <h1 className="text-3xl font-black">{countdown} 後啟程</h1>
                     </header>
 
                     <nav className="sticky top-4 z-50 px-4 mb-8">
-                        <div className="bg-slate-900/80 backdrop-blur-xl p-1 rounded-full border border-white/10 flex overflow-x-auto no-scrollbar">
-                            {['itinerary', 'packing', 'info'].map((tab) => (
-                                <button key={tab} onClick={() => setActiveTab(tab)} className={`flex-1 min-w-[80px] py-3 rounded-full text-[10px] font-bold uppercase transition-all relative ${activeTab === tab ? 'text-white' : 'text-slate-500'}`}>
+                        <div className="bg-slate-900/80 backdrop-blur-xl p-1 rounded-full border border-white/10 flex">
+                            {['itinerary', 'packing'].map((tab) => (
+                                <button key={tab} onClick={() => setActiveTab(tab)} className={`flex-1 py-3 rounded-full text-xs font-bold uppercase relative ${activeTab === tab ? 'text-white' : 'text-slate-500'}`}>
                                     {activeTab === tab && <motion.div layoutId="tab" className="absolute inset-0 bg-cyan-600 rounded-full z-0" />}
-                                    <span className="relative z-10">{tab === 'itinerary' ? '行程' : tab === 'packing' ? '行李' : '資訊'}</span>
+                                    <span className="relative z-10">{tab === 'itinerary' ? '行程' : '行李'}</span>
                                 </button>
                             ))}
                         </div>
                     </nav>
 
-                    <main className="relative z-30 px-6 max-w-md mx-auto">
-                        <AnimatePresence mode="wait">
-                            {activeTab === 'itinerary' && (
-                                <motion.div key="itinerary" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
-                                    {filteredItinerary.map((item) => (
-                                        <div key={item.day} onClick={() => {setSelectedDay(item); setCurrentBg(item.bgUrl)}} className="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-lg cursor-pointer">
-                                            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-white`}>
-                                                {item.icon}
-                                            </div>
-                                            <div className="flex-1">
-                                                <div className="text-[10px] font-bold text-blue-600 uppercase text-left">{item.day} · {item.date}</div>
-                                                <div className="text-slate-900 font-bold text-left">{item.title}</div>
-                                                <div className="text-slate-400 text-xs truncate text-left">{item.detail}</div>
-                                            </div>
-                                            <ChevronRight size={16} className="text-slate-300" />
+                    <main className="relative z-30 px-6">
+                        {activeTab === 'itinerary' && (
+                            <div className="space-y-4">
+                                {filteredItinerary.map((item) => (
+                                    <div key={item.day} onClick={() => {setSelectedDay(item); setCurrentBg(item.bgUrl)}} className="bg-white rounded-2xl p-4 flex items-center gap-4">
+                                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-white`}>
+                                            {item.icon}
                                         </div>
-                                    ))}
-                                </motion.div>
-                            )}
+                                        <div className="flex-1">
+                                            <div className="text-slate-900 font-bold">{item.title}</div>
+                                            <div className="text-slate-400 text-xs">{item.detail}</div>
+                                        </div>
+                                        <ChevronRight size={16} className="text-slate-300" />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
-                            {activeTab === 'packing' && (
-                                <motion.div key="packing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
-                                    {Object.entries(initialPackingList).map(([category, items]) => (
-                                        <div key={category} className="bg-slate-800/50 backdrop-blur-md rounded-2xl p-5 border border-white/5">
-                                            <h3 className="text-cyan-400 text-xs font-bold mb-4 text-left">{category}</h3>
-                                            <div className="space-y-3 text-left">
-                                                {items.map(item => (
-                                                    <div key={item} onClick={() => setCheckedItems(prev => ({...prev, [item]: !prev[item]}))} className="flex items-center gap-3">
-                                                        {checkedItems[item] ? <CheckCircle2 size={18} className="text-emerald-500" /> : <Circle size={18} className="text-slate-600" />}
-                                                        <span className={`text-sm ${checkedItems[item] ? 'line-through text-slate-500' : 'text-slate-200'}`}>{item}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
+                        {activeTab === 'packing' && (
+                            <div className="space-y-6">
+                                {Object.entries(initialPackingList).map(([category, items]) => (
+                                    <div key={category} className="bg-slate-800/50 p-5 rounded-2xl">
+                                        <h3 className="text-cyan-400 text-xs font-bold mb-4">{category}</h3>
+                                        <div className="space-y-3">
+                                            {items.map(item => (
+                                                <div key={item} onClick={() => setCheckedItems(prev => ({...prev, [item]: !prev[item]}))} className="flex items-center gap-3">
+                                                    {checkedItems[item] ? <CheckCircle2 size={18} className="text-emerald-500" /> : <Circle size={18} className="text-slate-600" />}
+                                                    <span className={`text-sm ${checkedItems[item] ? 'line-through text-slate-500' : ''}`}>{item}</span>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </main>
 
                     <AnimatePresence>
                         {selectedDay && (
                             <div className="fixed inset-0 z-[100] flex items-end">
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedDay(null)} className="absolute inset-0 bg-black/80" />
-                                <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="relative w-full bg-white rounded-t-3xl p-6 text-slate-900 max-h-[85vh] overflow-y-auto text-left">
-                                    <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-6" />
-                                    <div className="flex justify-between items-center mb-6">
-                                        <div className="text-left">
-                                            <div className="text-xs font-bold text-blue-600 text-left">{selectedDay.day} · {selectedDay.date}</div>
-                                            <h2 className="text-2xl font-black text-left">{selectedDay.title}</h2>
-                                        </div>
-                                        <button onClick={() => setSelectedDay(null)} className="p-2 bg-slate-100 rounded-full"><X size={20} /></button>
-                                    </div>
-                                    <div className="space-y-6 text-left">
+                                <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="relative w-full bg-white rounded-t-3xl p-6 text-slate-900 max-h-[80vh] overflow-y-auto">
+                                    <h2 className="text-2xl font-black mb-6">{selectedDay.title}</h2>
+                                    <div className="space-y-6">
                                         {selectedDay.extendedDetail.map((step, i) => (
-                                            <div key={i} className="flex gap-4">
-                                                <div className="text-cyan-600 font-bold text-xs pt-1 w-12 text-left">{step.time}</div>
-                                                <div className="flex-1 text-slate-800 font-bold text-left">{step.task}</div>
+                                            <div key={i} className="flex gap-4 border-l-2 border-slate-100 pl-4">
+                                                <div className="text-cyan-600 font-bold text-xs">{step.time}</div>
+                                                <div className="font-bold">{step.task}</div>
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-100 italic text-sm text-slate-500 text-left">
-                                        {selectedDay.memo}
-                                    </div>
-                                    <button onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedDay.mapQuery)}`)} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold mt-8 flex items-center justify-center gap-2">
-                                        <MapPin size={18} /> 查看 Google 地圖
-                                    </button>
+                                    <button onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedDay.mapQuery)}`)} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold mt-8">開啟地圖</button>
                                 </motion.div>
                             </div>
                         )}
                     </AnimatePresence>
-
-                    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[280px] z-50">
-                        <div className="bg-slate-900/90 backdrop-blur-2xl rounded-full p-2 flex justify-around items-center shadow-2xl border border-white/10 h-14">
-                            <button onClick={() => setFilter('transport')} className={`p-2 rounded-full ${filter === 'transport' ? 'text-cyan-400' : 'text-slate-600'}`}><Plane size={20} /></button>
-                            <button onClick={() => {setFilter('all'); setCurrentBg(itineraryData[0].bgUrl)}} className="w-12 h-12 bg-cyan-600 rounded-full flex items-center justify-center text-white"><Snowflake size={24} /></button>
-                            <button onClick={() => setFilter('ski')} className={`p-2 rounded-full ${filter === 'ski' ? 'text-blue-400' : 'text-slate-600'}`}><CloudSnow size={20} /></button>
-                        </div>
-                    </div>
                 </div>
             );
         };
